@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: trademate-production
+  labels:
+    name: trademate-production
+    environment: production
+    tier: application
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: trademate-service-account
+  namespace: trademate-production
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: trademate-production
+  name: trademate-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "configmaps", "secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: trademate-role-binding
+  namespace: trademate-production
+subjects:
+- kind: ServiceAccount
+  name: trademate-service-account
+  namespace: trademate-production
+roleRef:
+  kind: Role
+  name: trademate-role
+  apiGroup: rbac.authorization.k8s.io

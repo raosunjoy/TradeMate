@@ -54,6 +54,16 @@ class Settings(BaseSettings):
     SETU_CLIENT_ID: Optional[str] = Field(default=None, env="SETU_CLIENT_ID")
     SETU_CLIENT_SECRET: Optional[str] = Field(default=None, env="SETU_CLIENT_SECRET")
     SETU_BASE_URL: str = Field(default="https://prod.setu.co", env="SETU_BASE_URL")
+    SETU_WEBHOOK_SECRET: Optional[str] = Field(default=None, env="SETU_WEBHOOK_SECRET")
+    
+    # Stripe Payment Gateway
+    STRIPE_SECRET_KEY: Optional[str] = Field(default=None, env="STRIPE_SECRET_KEY")
+    STRIPE_PUBLISHABLE_KEY: Optional[str] = Field(default=None, env="STRIPE_PUBLISHABLE_KEY")
+    STRIPE_WEBHOOK_SECRET: Optional[str] = Field(default=None, env="STRIPE_WEBHOOK_SECRET")
+    
+    # Razorpay Payment Gateway
+    RAZORPAY_KEY_ID: Optional[str] = Field(default=None, env="RAZORPAY_KEY_ID")
+    RAZORPAY_KEY_SECRET: Optional[str] = Field(default=None, env="RAZORPAY_KEY_SECRET")
     
     # Enterprise Security
     ENCRYPTION_KEY: str = Field(..., env="ENCRYPTION_KEY")

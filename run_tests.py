@@ -16,6 +16,18 @@ def run_test_suite():
     print("🚀 TradeMate 100% Test Coverage Validation")
     print("=" * 60)
     
+    # Set test environment
+    os.environ["ENVIRONMENT"] = "test"
+    
+    # Load test environment variables
+    test_env_file = Path(__file__).parent / ".env.test"
+    if test_env_file.exists():
+        with open(test_env_file) as f:
+            for line in f:
+                if line.strip() and not line.startswith("#"):
+                    key, value = line.strip().split("=", 1)
+                    os.environ[key] = value
+    
     project_root = Path(__file__).parent
     
     # Test suites to run
