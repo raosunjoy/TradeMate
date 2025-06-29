@@ -2,8 +2,9 @@
 const { withSentryConfig } = require('@sentry/nextjs');
 
 const nextConfig = {
-  experimental: {
-    appDir: true,
+  swcMinify: false,
+  compiler: {
+    removeConsole: false,
   },
   typescript: {
     ignoreBuildErrors: false,
@@ -53,8 +54,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withSentryConfig(nextConfig, {
-  silent: true,
-  org: 'trademate',
-  project: 'partner-portal',
-});
+module.exports = nextConfig;

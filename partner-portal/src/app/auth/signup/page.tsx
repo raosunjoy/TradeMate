@@ -118,7 +118,7 @@ const SignUpPage: React.FC = () => {
         email: formData.email,
         password: formData.password,
         companyName: formData.companyName,
-      });
+      }) as { success: boolean; message?: string };
 
       if (response.success) {
         // Auto sign in after successful registration

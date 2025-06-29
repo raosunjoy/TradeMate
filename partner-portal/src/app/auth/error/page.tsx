@@ -13,9 +13,9 @@ import {
 
 const AuthErrorPage: React.FC = () => {
   const searchParams = useSearchParams();
-  const error = searchParams.get('error');
+  const error = searchParams?.get('error');
 
-  const getErrorDetails = (error: string | null) => {
+  const getErrorDetails = (error: string | null | undefined) => {
     switch (error) {
       case 'Configuration':
         return {

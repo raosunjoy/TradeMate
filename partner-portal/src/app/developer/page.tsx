@@ -1,7 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { 
   Code, 
   Book, 
@@ -16,10 +19,26 @@ import {
   Terminal,
   Database,
   Webhook,
-  Settings
+  Settings,
+  Bell,
+  LogOut,
+  Home
 } from 'lucide-react';
 
 const DeveloperPortal: React.FC = () => {
+  const { data: session, status } = useSession();
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (status === 'unauthenticated') {
+    redirect('/auth/signin');
+  }
   const [activeTab, setActiveTab] = useState('overview');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
@@ -31,8 +50,7 @@ const DeveloperPortal: React.FC = () => {
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
+    animate: { opacity: 1, y: 0 }
   };
 
   const staggerChildren = {
@@ -61,23 +79,56 @@ const DeveloperPortal: React.FC = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                Get API Key
-              </button>
-              <button className="text-slate-600 hover:text-slate-900 transition-colors">
-                Sign In
-              </button>
+              <Link 
+                href="/dashboard"
+                className="flex items-center space-x-2 text-slate-600 hover:text-slate-900 transition-colors"
+              >
+                <Home className="h-4 w-4" />
+                <span>Dashboard</span>
+              </Link>
+              <div className="text-right">
+                <p className="text-sm font-medium text-slate-900">{session?.user?.name}</p>
+                <p className="text-xs text-slate-600">{session?.user?.email}</p>
+              </div>
+              <div className="flex items-center space-x-2">
+                <button className="p-2 text-slate-600 hover:text-slate-900 transition-colors">
+                  <Bell className="h-5 w-5" />
+                </button>
+                <button className="p-2 text-slate-600 hover:text-slate-900 transition-colors">
+                  <Settings className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </motion.header>
+
+      {/* Quick Navigation */}
+      <motion.div 
+        className="bg-blue-50 border-b border-blue-200"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <div className="flex items-center space-x-6 text-sm">
+            <Link href="/dashboard" className="text-blue-600 hover:text-blue-800 transition-colors">Dashboard</Link>
+            <span className="text-blue-300">•</span>
+            <Link href="/dashboard/analytics" className="text-blue-600 hover:text-blue-800 transition-colors">Analytics</Link>
+            <span className="text-blue-300">•</span>
+            <Link href="/dashboard/billing" className="text-blue-600 hover:text-blue-800 transition-colors">Billing</Link>
+            <span className="text-blue-300">•</span>
+            <span className="text-blue-800 font-medium">Developer Portal</span>
+          </div>
+        </div>
+      </motion.div>
 
       {/* Navigation Tabs */}
       <motion.div 
         className="bg-white border-b border-slate-200"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <nav className="flex space-x-8">
@@ -131,7 +182,7 @@ const DeveloperPortal: React.FC = () => {
               <h3 className="text-2xl font-bold text-slate-900 mb-6">Quick Start</h3>
               
               <div className="grid md:grid-cols-3 gap-6">
-                <motion.div variants={fadeInUp} className="text-center">
+                <motion.div variants={fadeInUp} transition={{ duration: 0.6 }} className="text-center">
                   <div className="bg-blue-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <Key className="h-8 w-8 text-blue-600" />
                   </div>
@@ -141,7 +192,7 @@ const DeveloperPortal: React.FC = () => {
                   </p>
                 </motion.div>
 
-                <motion.div variants={fadeInUp} className="text-center">
+                <motion.div variants={fadeInUp} transition={{ duration: 0.6 }} className="text-center">
                   <div className="bg-green-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <Code className="h-8 w-8 text-green-600" />
                   </div>
@@ -151,7 +202,7 @@ const DeveloperPortal: React.FC = () => {
                   </p>
                 </motion.div>
 
-                <motion.div variants={fadeInUp} className="text-center">
+                <motion.div variants={fadeInUp} transition={{ duration: 0.6 }} className="text-center">
                   <div className="bg-purple-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                     <Zap className="h-8 w-8 text-purple-600" />
                   </div>
@@ -166,7 +217,7 @@ const DeveloperPortal: React.FC = () => {
             {/* API Capabilities */}
             <motion.div 
               className="bg-white rounded-xl border border-slate-200 p-8"
-              variants={fadeInUp}
+              variants={fadeInUp} transition={{ duration: 0.6 }}
             >
               <h3 className="text-2xl font-bold text-slate-900 mb-6">API Capabilities</h3>
               
@@ -228,7 +279,7 @@ const DeveloperPortal: React.FC = () => {
             {/* Sample Code */}
             <motion.div 
               className="bg-white rounded-xl border border-slate-200 p-8"
-              variants={fadeInUp}
+              variants={fadeInUp} transition={{ duration: 0.6 }}
             >
               <h3 className="text-2xl font-bold text-slate-900 mb-6">Sample Code</h3>
               

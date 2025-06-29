@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import { faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
 
@@ -11,9 +10,10 @@ async function hashPassword(password: string): Promise<string> {
 function generateApiKey(): string {
   const prefix = 'tm_';
   const randomString = Array.from({ length: 32 }, () => 
-    Math.random().toString(36).charAt(0)
+    Math.random().toString(36).charAt(Math.floor(Math.random() * 36))
   ).join('');
-  return prefix + randomString;
+  const timestamp = Date.now().toString(36);
+  return prefix + randomString + timestamp;
 }
 
 async function createSeedData() {
@@ -21,7 +21,6 @@ async function createSeedData() {
 
   // Clear existing data
   await prisma.activity.deleteMany();
-  await prisma.apiUsage.deleteMany();
   await prisma.apiKey.deleteMany();
   await prisma.subscription.deleteMany();
   await prisma.session.deleteMany();
@@ -38,6 +37,7 @@ async function createSeedData() {
       data: {
         id: 'partner_enterprise_001',
         companyName: 'TechCorp Enterprise',
+        contactName: 'John Smith',
         contactEmail: 'contact@techcorp.com',
         contactPhone: '+1-555-0101',
         website: 'https://techcorp.com',
@@ -46,10 +46,6 @@ async function createSeedData() {
         status: 'APPROVED',
         industry: 'Technology',
         companySize: 'ENTERPRISE',
-        monthlyVolume: 1000000,
-        billingEmail: 'billing@techcorp.com',
-        webhookUrl: 'https://api.techcorp.com/webhooks/trademate',
-        rateLimitTier: 'enterprise',
         approvedAt: new Date(),
         approvedBy: 'admin@trademate.com',
       },
@@ -60,6 +56,7 @@ async function createSeedData() {
       data: {
         id: 'partner_fintech_002',
         companyName: 'FinTech Solutions Ltd',
+        contactName: 'Sarah Johnson',
         contactEmail: 'info@fintech-solutions.com',
         contactPhone: '+1-555-0202',
         website: 'https://fintech-solutions.com',
@@ -68,545 +65,323 @@ async function createSeedData() {
         status: 'APPROVED',
         industry: 'Financial Services',
         companySize: 'MEDIUM',
-        monthlyVolume: 250000,
-        billingEmail: 'accounts@fintech-solutions.com',
-        webhookUrl: 'https://api.fintech-solutions.com/webhooks',
-        rateLimitTier: 'premium',
         approvedAt: new Date(),
         approvedBy: 'admin@trademate.com',
       },
     }),
     
-    // Small Partner
+    // Small Partner  
     prisma.partner.create({
       data: {
         id: 'partner_startup_003',
-        companyName: 'Trading Startup Inc',
-        contactEmail: 'hello@trading-startup.com',
+        companyName: 'InnovateNow Startup',
+        contactName: 'Mike Chen',
+        contactEmail: 'founder@innovatenow.co',
         contactPhone: '+1-555-0303',
-        website: 'https://trading-startup.com',
-        description: 'Emerging trading platform for retail investors',
+        website: 'https://innovatenow.co',
+        description: 'Disruptive startup in the financial sector',
         tier: 'PRO',
         status: 'APPROVED',
         industry: 'FinTech',
         companySize: 'STARTUP',
-        monthlyVolume: 50000,
-        billingEmail: 'billing@trading-startup.com',
-        rateLimitTier: 'standard',
         approvedAt: new Date(),
         approvedBy: 'admin@trademate.com',
-      },
-    }),
-    
-    // Individual Developer
-    prisma.partner.create({
-      data: {
-        id: 'partner_developer_004',
-        companyName: 'Indie Developer Solutions',
-        contactEmail: 'dev@indie-solutions.com',
-        website: 'https://indie-solutions.com',
-        description: 'Independent developer building trading tools',
-        tier: 'LITE',
-        status: 'APPROVED',
-        industry: 'Software Development',
-        companySize: 'STARTUP',
-        monthlyVolume: 10000,
-        rateLimitTier: 'basic',
-        approvedAt: new Date(),
-        approvedBy: 'admin@trademate.com',
-      },
-    }),
-    
-    // Pending Partner
-    prisma.partner.create({
-      data: {
-        id: 'partner_pending_005',
-        companyName: 'New Trading Co',
-        contactEmail: 'contact@newtrading.com',
-        description: 'New company applying for partnership',
-        tier: 'LITE',
-        status: 'PENDING',
-        industry: 'Trading',
-        companySize: 'SMALL',
-        monthlyVolume: 5000,
       },
     }),
   ]);
 
-  console.log('✅ Created partners');
+  console.log(`✅ Created ${partners.length} partners`);
 
-  // Create Users with different roles
+  // Create test users for different roles
   const users = await Promise.all([
     // Super Admin
     prisma.user.create({
       data: {
         id: 'user_superadmin_001',
-        name: 'System Administrator',
+        name: 'Super Admin',
         email: 'superadmin@trademate.com',
         password: await hashPassword('SuperAdmin123!'),
         role: 'SUPER_ADMIN',
         status: 'ACTIVE',
-        permissions: {
-          canManageUsers: true,
-          canManagePartners: true,
-          canManageSystem: true,
-          canViewAnalytics: true,
-          canManageBilling: true,
-          canAccessAdmin: true,
-        },
-        lastLoginAt: new Date(),
+        emailVerified: new Date(),
       },
     }),
-    
+
     // Admin
     prisma.user.create({
       data: {
-        id: 'user_admin_002',
-        name: 'Admin Manager',
+        id: 'user_admin_001',
+        name: 'Admin User',
         email: 'admin@trademate.com',
         password: await hashPassword('Admin123!'),
         role: 'ADMIN',
         status: 'ACTIVE',
-        permissions: {
-          canManageUsers: true,
-          canManagePartners: true,
-          canViewAnalytics: true,
-          canAccessAdmin: true,
-        },
-        lastLoginAt: new Date(),
+        emailVerified: new Date(),
       },
     }),
-    
-    // Enterprise Partner Admin
+
+    // Partner Admin for Enterprise
     prisma.user.create({
       data: {
-        id: 'user_enterprise_admin_003',
-        name: 'John Enterprise',
-        email: 'john.admin@techcorp.com',
-        password: await hashPassword('Enterprise123!'),
+        id: 'user_partner_admin_001',
+        name: 'John Smith',
+        email: 'john@techcorp.com',
+        password: await hashPassword('Partner123!'),
         role: 'PARTNER_ADMIN',
         status: 'ACTIVE',
+        emailVerified: new Date(),
+        partnerId: partners[0].id,
         companyName: 'TechCorp Enterprise',
-        partnerId: 'partner_enterprise_001',
-        permissions: {
-          canManageTeam: true,
-          canManageApiKeys: true,
-          canViewAnalytics: true,
-          canManageBilling: true,
-        },
-        lastLoginAt: faker.date.recent(),
       },
     }),
-    
-    // Enterprise Developer
+
+    // Partner User for Enterprise
     prisma.user.create({
       data: {
-        id: 'user_enterprise_dev_004',
-        name: 'Sarah Developer',
-        email: 'sarah.dev@techcorp.com',
-        password: await hashPassword('Developer123!'),
-        role: 'DEVELOPER',
-        status: 'ACTIVE',
-        companyName: 'TechCorp Enterprise',
-        partnerId: 'partner_enterprise_001',
-        permissions: {
-          canUseApi: true,
-          canViewDocs: true,
-          canManageApiKeys: true,
-        },
-        lastLoginAt: faker.date.recent(),
-      },
-    }),
-    
-    // FinTech Partner Admin
-    prisma.user.create({
-      data: {
-        id: 'user_fintech_admin_005',
-        name: 'Mike FinTech',
-        email: 'mike@fintech-solutions.com',
-        password: await hashPassword('FinTech123!'),
-        role: 'PARTNER_ADMIN',
-        status: 'ACTIVE',
-        companyName: 'FinTech Solutions Ltd',
-        partnerId: 'partner_fintech_002',
-        permissions: {
-          canManageTeam: true,
-          canManageApiKeys: true,
-          canViewAnalytics: true,
-          canManageBilling: true,
-        },
-        lastLoginAt: faker.date.recent(),
-      },
-    }),
-    
-    // Startup Partner
-    prisma.user.create({
-      data: {
-        id: 'user_startup_006',
-        name: 'Alex Startup',
-        email: 'alex@trading-startup.com',
-        password: await hashPassword('Startup123!'),
+        id: 'user_partner_001',
+        name: 'Jane Doe',
+        email: 'jane@techcorp.com',
+        password: await hashPassword('User123!'),
         role: 'PARTNER',
         status: 'ACTIVE',
-        companyName: 'Trading Startup Inc',
-        partnerId: 'partner_startup_003',
-        permissions: {
-          canUseApi: true,
-          canViewDocs: true,
-          canManageApiKeys: true,
-        },
-        lastLoginAt: faker.date.recent(),
+        emailVerified: new Date(),
+        partnerId: partners[0].id,
+        companyName: 'TechCorp Enterprise',
       },
     }),
-    
-    // Individual Developer
+
+    // Developer for Medium Partner
     prisma.user.create({
       data: {
-        id: 'user_indie_dev_007',
-        name: 'Emma Developer',
-        email: 'emma@indie-solutions.com',
-        password: await hashPassword('IndieDev123!'),
+        id: 'user_developer_001',
+        name: 'Sarah Johnson',
+        email: 'sarah@fintech-solutions.com',
+        password: await hashPassword('Dev123!'),
         role: 'DEVELOPER',
         status: 'ACTIVE',
-        companyName: 'Indie Developer Solutions',
-        partnerId: 'partner_developer_004',
-        permissions: {
-          canUseApi: true,
-          canViewDocs: true,
-        },
-        lastLoginAt: faker.date.recent(),
+        emailVerified: new Date(),
+        partnerId: partners[1].id,
+        companyName: 'FinTech Solutions Ltd',
       },
     }),
-    
-    // Viewer Role
+
+    // Viewer for Small Partner
     prisma.user.create({
       data: {
-        id: 'user_viewer_008',
-        name: 'Tom Viewer',
-        email: 'tom.viewer@techcorp.com',
-        password: await hashPassword('Viewer123!'),
+        id: 'user_viewer_001',
+        name: 'Mike Chen',
+        email: 'mike@innovatenow.co',
+        password: await hashPassword('View123!'),
         role: 'VIEWER',
         status: 'ACTIVE',
-        companyName: 'TechCorp Enterprise',
-        partnerId: 'partner_enterprise_001',
-        permissions: {
-          canViewDocs: true,
-          canViewAnalytics: true,
-        },
-        lastLoginAt: faker.date.recent(),
-      },
-    }),
-    
-    // Pending User
-    prisma.user.create({
-      data: {
-        id: 'user_pending_009',
-        name: 'Jane Pending',
-        email: 'jane@newtrading.com',
-        password: await hashPassword('Pending123!'),
-        role: 'PARTNER',
-        status: 'PENDING_VERIFICATION',
-        companyName: 'New Trading Co',
-        partnerId: 'partner_pending_005',
-        permissions: {},
-      },
-    }),
-    
-    // Suspended User
-    prisma.user.create({
-      data: {
-        id: 'user_suspended_010',
-        name: 'Bob Suspended',
-        email: 'bob.suspended@example.com',
-        password: await hashPassword('Suspended123!'),
-        role: 'PARTNER',
-        status: 'SUSPENDED',
-        companyName: 'Suspended Company',
-        permissions: {},
+        emailVerified: new Date(),
+        partnerId: partners[2].id,
+        companyName: 'InnovateNow Startup',
       },
     }),
   ]);
 
-  console.log('✅ Created users');
+  console.log(`✅ Created ${users.length} users`);
 
-  // Create API Keys for active partners
+  // Create API Keys for partners
   const apiKeys = await Promise.all([
     // Enterprise API Keys
     prisma.apiKey.create({
       data: {
-        name: 'Production API Key',
+        id: 'apikey_enterprise_prod',
+        name: 'Enterprise Production',
         key: generateApiKey(),
-        hashedKey: await hashPassword(generateApiKey()),
-        partnerId: 'partner_enterprise_001',
-        userId: 'user_enterprise_admin_003',
-        scopes: ['read:market-data', 'write:orders', 'read:analytics', 'webhook:all'],
+        secret: generateApiKey(),
+        partnerId: partners[0].id,
+        userId: users[2].id, // Partner Admin
         environment: 'PRODUCTION',
-        status: 'ACTIVE',
-        requestCount: faker.number.int({ min: 10000, max: 100000 }),
-        lastUsedAt: faker.date.recent(),
+        scopes: JSON.stringify(['market-data', 'whatsapp', 'zero-knowledge', 'analytics']),
+        rateLimit: 10000,
       },
     }),
-    
+
     prisma.apiKey.create({
       data: {
-        name: 'Sandbox Testing',
+        id: 'apikey_enterprise_sandbox',
+        name: 'Enterprise Sandbox',
         key: generateApiKey(),
-        hashedKey: await hashPassword(generateApiKey()),
-        partnerId: 'partner_enterprise_001',
-        userId: 'user_enterprise_dev_004',
-        scopes: ['read:market-data', 'read:analytics'],
+        secret: generateApiKey(),
+        partnerId: partners[0].id,
+        userId: users[2].id, // Partner Admin
         environment: 'SANDBOX',
-        status: 'ACTIVE',
-        requestCount: faker.number.int({ min: 1000, max: 10000 }),
-        lastUsedAt: faker.date.recent(),
+        scopes: JSON.stringify(['market-data', 'whatsapp', 'zero-knowledge']),
+        rateLimit: 1000,
       },
     }),
-    
-    // FinTech API Key
+
+    // Medium Partner API Key
     prisma.apiKey.create({
       data: {
+        id: 'apikey_fintech_prod',
         name: 'FinTech Production',
         key: generateApiKey(),
-        hashedKey: await hashPassword(generateApiKey()),
-        partnerId: 'partner_fintech_002',
-        userId: 'user_fintech_admin_005',
-        scopes: ['read:market-data', 'write:orders'],
+        secret: generateApiKey(),
+        partnerId: partners[1].id,
+        userId: users[4].id, // Developer
         environment: 'PRODUCTION',
-        status: 'ACTIVE',
-        requestCount: faker.number.int({ min: 5000, max: 50000 }),
-        lastUsedAt: faker.date.recent(),
+        scopes: JSON.stringify(['market-data', 'whatsapp']),
+        rateLimit: 5000,
       },
     }),
-    
-    // Startup API Key
+
+    // Small Partner API Key
     prisma.apiKey.create({
       data: {
-        name: 'Startup Main Key',
+        id: 'apikey_startup_sandbox',
+        name: 'Startup Sandbox',
         key: generateApiKey(),
-        hashedKey: await hashPassword(generateApiKey()),
-        partnerId: 'partner_startup_003',
-        userId: 'user_startup_006',
-        scopes: ['read:market-data'],
-        environment: 'PRODUCTION',
-        status: 'ACTIVE',
-        requestCount: faker.number.int({ min: 1000, max: 5000 }),
-        lastUsedAt: faker.date.recent(),
-      },
-    }),
-    
-    // Indie Developer API Key
-    prisma.apiKey.create({
-      data: {
-        name: 'Personal Project',
-        key: generateApiKey(),
-        hashedKey: await hashPassword(generateApiKey()),
-        partnerId: 'partner_developer_004',
-        userId: 'user_indie_dev_007',
-        scopes: ['read:market-data'],
+        secret: generateApiKey(),
+        partnerId: partners[2].id,
+        userId: users[5].id, // Viewer
         environment: 'SANDBOX',
-        status: 'ACTIVE',
-        requestCount: faker.number.int({ min: 100, max: 1000 }),
-        lastUsedAt: faker.date.recent(),
+        scopes: JSON.stringify(['market-data']),
+        rateLimit: 500,
       },
     }),
   ]);
 
-  console.log('✅ Created API keys');
+  console.log(`✅ Created ${apiKeys.length} API keys`);
 
-  // Create Subscriptions
+  // Create subscriptions
   const subscriptions = await Promise.all([
     // Enterprise Subscription
     prisma.subscription.create({
       data: {
-        partnerId: 'partner_enterprise_001',
+        id: 'sub_enterprise_001',
+        partnerId: partners[0].id,
+        planName: 'Black Tier Enterprise',
         tier: 'BLACK',
         status: 'ACTIVE',
-        monthlyPrice: 5000.00,
-        yearlyPrice: 50000.00,
         billingCycle: 'YEARLY',
-        apiCallsLimit: 10000000,
-        usersLimit: 100,
-        storageLimit: 1000000,
-        currentPeriodStart: new Date(),
-        currentPeriodEnd: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+        monthlyPrice: 2999.99,
+        yearlyPrice: 29999.99,
+        requestLimit: 1000000,
+        userLimit: 50,
+        features: JSON.stringify([
+          'unlimited_api_calls',
+          'priority_support',
+          'custom_integrations',
+          'dedicated_account_manager',
+          'sla_guarantee'
+        ]),
       },
     }),
-    
-    // FinTech Subscription
+
+    // Medium Partner Subscription
     prisma.subscription.create({
       data: {
-        partnerId: 'partner_fintech_002',
+        id: 'sub_fintech_002',
+        partnerId: partners[1].id,
+        planName: 'Elite Tier Professional',
         tier: 'ELITE',
         status: 'ACTIVE',
-        monthlyPrice: 1500.00,
-        yearlyPrice: 15000.00,
         billingCycle: 'MONTHLY',
-        apiCallsLimit: 1000000,
-        usersLimit: 25,
-        storageLimit: 500000,
-        currentPeriodStart: new Date(),
-        currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        monthlyPrice: 999.99,
+        yearlyPrice: 9999.99,
+        requestLimit: 250000,
+        userLimit: 20,
+        features: JSON.stringify([
+          'extended_api_access',
+          'priority_support',
+          'analytics_dashboard',
+          'webhook_support'
+        ]),
       },
     }),
-    
-    // Startup Subscription
+
+    // Small Partner Subscription
     prisma.subscription.create({
       data: {
-        partnerId: 'partner_startup_003',
+        id: 'sub_startup_003',
+        partnerId: partners[2].id,
+        planName: 'Pro Tier Starter',
         tier: 'PRO',
         status: 'ACTIVE',
-        monthlyPrice: 500.00,
-        yearlyPrice: 5000.00,
         billingCycle: 'MONTHLY',
-        apiCallsLimit: 100000,
-        usersLimit: 10,
-        storageLimit: 100000,
-        currentPeriodStart: new Date(),
-        currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        trialStart: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
-        trialEnd: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
-      },
-    }),
-    
-    // Indie Developer Subscription
-    prisma.subscription.create({
-      data: {
-        partnerId: 'partner_developer_004',
-        tier: 'LITE',
-        status: 'TRIALING',
-        monthlyPrice: 0.00,
-        billingCycle: 'MONTHLY',
-        apiCallsLimit: 10000,
-        usersLimit: 1,
-        storageLimit: 10000,
-        currentPeriodStart: new Date(),
-        currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        trialStart: new Date(),
-        trialEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        monthlyPrice: 299.99,
+        yearlyPrice: 2999.99,
+        requestLimit: 50000,
+        userLimit: 5,
+        features: JSON.stringify([
+          'standard_api_access',
+          'email_support',
+          'basic_analytics'
+        ]),
       },
     }),
   ]);
 
-  console.log('✅ Created subscriptions');
+  console.log(`✅ Created ${subscriptions.length} subscriptions`);
 
-  // Create sample API usage data
-  const apiUsagePromises = [];
-  
-  for (const apiKey of apiKeys) {
-    // Generate 50-200 usage records per API key
-    const usageCount = faker.number.int({ min: 50, max: 200 });
-    
-    for (let i = 0; i < usageCount; i++) {
-      apiUsagePromises.push(
-        prisma.apiUsage.create({
-          data: {
-            apiKeyId: apiKey.id,
-            endpoint: faker.helpers.arrayElement([
-              '/api/v1/market-data/stocks',
-              '/api/v1/market-data/crypto',
-              '/api/v1/orders',
-              '/api/v1/analytics/portfolio',
-              '/api/v1/user/profile',
-            ]),
-            method: faker.helpers.arrayElement(['GET', 'POST', 'PUT', 'DELETE']),
-            statusCode: faker.helpers.weightedArrayElement([
-              { weight: 80, value: 200 },
-              { weight: 10, value: 400 },
-              { weight: 5, value: 401 },
-              { weight: 3, value: 429 },
-              { weight: 2, value: 500 },
-            ]),
-            responseTime: faker.number.int({ min: 10, max: 2000 }),
-            requestSize: faker.number.int({ min: 100, max: 5000 }),
-            responseSize: faker.number.int({ min: 200, max: 10000 }),
-            userAgent: 'TradeMate-SDK/1.0',
-            ipAddress: faker.internet.ip(),
-            timestamp: faker.date.recent({ days: 30 }),
-          },
-        })
-      );
-    }
-  }
-  
-  await Promise.all(apiUsagePromises);
-  console.log('✅ Created API usage data');
+  // Create some activity logs
+  const activities = await Promise.all([
+    prisma.activity.create({
+      data: {
+        type: 'USER_LOGIN',
+        userId: users[2].id,
+        partnerId: partners[0].id,
+        title: 'User Login',
+        description: 'Partner admin logged in successfully',
+        ipAddress: '192.168.1.100',
+        userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)',
+      },
+    }),
 
-  // Create activity logs
-  const activities = [];
-  
-  // User activities
-  for (const user of users.filter(u => u.status === 'ACTIVE')) {
-    // Login activities
-    activities.push(
-      prisma.activity.create({
-        data: {
-          userId: user.id,
-          partnerId: user.partnerId,
-          type: 'USER_LOGIN',
-          action: 'User logged in',
-          description: `${user.name} logged into the portal`,
-          ipAddress: faker.internet.ip(),
-          userAgent: faker.internet.userAgent(),
-          timestamp: faker.date.recent({ days: 7 }),
-        },
-      })
-    );
-  }
-  
-  // API key activities
-  for (const apiKey of apiKeys) {
-    activities.push(
-      prisma.activity.create({
-        data: {
-          userId: apiKey.userId,
-          partnerId: apiKey.partnerId,
-          type: 'API_KEY_CREATED',
-          action: 'API key created',
-          description: `API key "${apiKey.name}" was created`,
-          metadata: {
-            apiKeyId: apiKey.id,
-            environment: apiKey.environment,
-            scopes: apiKey.scopes,
-          },
-          timestamp: faker.date.recent({ days: 30 }),
-        },
-      })
-    );
-  }
-  
-  await Promise.all(activities);
-  console.log('✅ Created activity logs');
+    prisma.activity.create({
+      data: {
+        type: 'API_KEY_CREATED',
+        userId: users[2].id,
+        partnerId: partners[0].id,
+        title: 'API Key Created',
+        description: 'Created new production API key',
+        metadata: JSON.stringify({ keyId: apiKeys[0].id }),
+      },
+    }),
 
-  console.log('🎉 Database seeding completed successfully!');
-  console.log('\n📋 Test User Credentials:');
-  console.log('\n🔑 Admin Users:');
-  console.log('  Super Admin: superadmin@trademate.com / SuperAdmin123!');
-  console.log('  Admin: admin@trademate.com / Admin123!');
-  console.log('\n🏢 Partner Users:');
-  console.log('  Enterprise Admin: john.admin@techcorp.com / Enterprise123!');
-  console.log('  Enterprise Developer: sarah.dev@techcorp.com / Developer123!');
-  console.log('  FinTech Admin: mike@fintech-solutions.com / FinTech123!');
-  console.log('  Startup Partner: alex@trading-startup.com / Startup123!');
-  console.log('  Indie Developer: emma@indie-solutions.com / IndieDev123!');
-  console.log('  Viewer: tom.viewer@techcorp.com / Viewer123!');
-  console.log('\n⚠️  Test Users:');
-  console.log('  Pending: jane@newtrading.com / Pending123!');
-  console.log('  Suspended: bob.suspended@example.com / Suspended123!');
+    prisma.activity.create({
+      data: {
+        type: 'API_CALL',
+        userId: users[4].id,
+        partnerId: partners[1].id,
+        title: 'API Call Made',
+        description: 'Market data API called successfully',
+        metadata: JSON.stringify({ endpoint: '/api/v1/market-data', responseTime: '120ms' }),
+      },
+    }),
+  ]);
+
+  console.log(`✅ Created ${activities.length} activity logs`);
+
+  console.log(`
+🎉 Database seeding completed successfully!
+
+📊 Summary:
+• ${partners.length} Partners created
+• ${users.length} Users created  
+• ${apiKeys.length} API Keys created
+• ${subscriptions.length} Subscriptions created
+• ${activities.length} Activity logs created
+
+🔐 Test User Credentials:
+• Super Admin: superadmin@trademate.com / SuperAdmin123!
+• Admin: admin@trademate.com / Admin123!
+• Partner Admin: john@techcorp.com / Partner123!
+• Partner User: jane@techcorp.com / User123!
+• Developer: sarah@fintech-solutions.com / Dev123!
+• Viewer: mike@innovatenow.co / View123!
+  `);
 }
 
-async function main() {
-  try {
-    await createSeedData();
-  } catch (error) {
-    console.error('❌ Error during seeding:', error);
+createSeedData()
+  .catch((e) => {
+    console.error('❌ Seeding failed:', e);
     process.exit(1);
-  } finally {
+  })
+  .finally(async () => {
     await prisma.$disconnect();
-  }
-}
-
-if (require.main === module) {
-  main();
-}
-
-export default main;
+  });

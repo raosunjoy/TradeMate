@@ -20,8 +20,8 @@ import {
 const SignInPage: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
-  const error = searchParams.get('error');
+  const callbackUrl = searchParams?.get('callbackUrl') || '/dashboard';
+  const error = searchParams?.get('error');
 
   const [formData, setFormData] = useState({
     email: '',
@@ -72,7 +72,7 @@ const SignInPage: React.FC = () => {
     }
   };
 
-  const getErrorMessage = (error: string | null) => {
+  const getErrorMessage = (error: string | null | undefined) => {
     switch (error) {
       case 'CredentialsSignin':
         return 'Invalid credentials. Please check your email and password.';

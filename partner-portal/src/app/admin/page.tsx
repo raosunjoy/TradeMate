@@ -75,8 +75,7 @@ const AdminDashboard: React.FC = () => {
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
+    animate: { opacity: 1, y: 0 }
   };
 
   const staggerChildren = {
@@ -173,7 +172,7 @@ const AdminDashboard: React.FC = () => {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {activeTab === 'overview' && (
-          <motion.div {...fadeInUp} className="space-y-8">
+          <motion.div {...fadeInUp} transition={{ duration: 0.6 }} className="space-y-8">
             {/* Key Metrics */}
             <motion.div 
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
@@ -218,6 +217,7 @@ const AdminDashboard: React.FC = () => {
                 <motion.div
                   key={index}
                   variants={fadeInUp}
+                  transition={{ duration: 0.6 }}
                   className="bg-white p-6 rounded-xl border border-slate-200 hover:shadow-lg transition-shadow"
                 >
                   <div className="flex items-center justify-between">

@@ -293,14 +293,15 @@ const PredictiveInsights: React.FC<PredictiveInsightsProps> = ({ predictions }) 
 };
 
 const SelfHealingDashboard: React.FC = () => {
+  const store = useSelfHealingStore();
   const { 
     healingStatus, 
     metrics, 
-    incidents, 
     startHealthMonitoring, 
     stopHealthMonitoring,
     triggerManualRecovery 
-  } = useSelfHealingStore();
+  } = store;
+  const incidents = (store as any).incidents || [];
 
   useEffect(() => {
     // Start monitoring when component mounts
@@ -354,7 +355,7 @@ const SelfHealingDashboard: React.FC = () => {
         />
         <MetricCard
           title="Incidents Prevented"
-          value={metrics.incidentsP evented}
+          value={metrics.incidentsPrevented}
           period="Last 24h"
           icon={<Shield className="w-6 h-6 text-green-500" />}
         />

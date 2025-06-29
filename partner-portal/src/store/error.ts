@@ -151,10 +151,10 @@ export const useErrorStore = create<ErrorState>()(
           message: 'Operation retried successfully',
           autoHide: true,
         });
-      } catch (error) {
+      } catch (error: any) {
         get().addError({
           code: 'RETRY_FAILED',
-          message: `Failed to retry operation: ${error.message}`,
+          message: `Failed to retry operation: ${error?.message || 'Unknown error'}`,
           details: { operationId },
         });
       }
@@ -237,7 +237,7 @@ export function useErrorRecovery() {
   ): Promise<T> => {
     const { maxRetries = 3, delay = 1000, backoff = true, onRetry } = options;
     
-    let lastError: Error;
+    let lastError: Error = new Error('Operation failed');
     
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {

@@ -21,8 +21,7 @@ import Link from 'next/link';
 const LandingPage = () => {
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
+    animate: { opacity: 1, y: 0 }
   };
 
   const staggerChildren = {
@@ -60,7 +59,7 @@ const LandingPage = () => {
                 Contact
               </Link>
               <Link 
-                href="/auth/login"
+                href="/auth/signin"
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Sign In
@@ -81,6 +80,7 @@ const LandingPage = () => {
           >
             <motion.div
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium mb-8"
             >
               <Zap className="w-4 h-4 mr-2" />
@@ -89,6 +89,7 @@ const LandingPage = () => {
 
             <motion.h1
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="text-5xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight"
             >
               AI Support +{' '}
@@ -100,6 +101,7 @@ const LandingPage = () => {
 
             <motion.p
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed"
             >
               Transform your fintech business with enterprise-grade AI support, Zero-Knowledge privacy, 
@@ -108,6 +110,7 @@ const LandingPage = () => {
 
             <motion.div
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
             >
               <Link
@@ -121,13 +124,14 @@ const LandingPage = () => {
                 href="/demo"
                 className="bg-white text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transition-all duration-200 border border-gray-200 shadow-lg"
               >
-                Watch Demo
+                Try Interactive Demo
               </Link>
             </motion.div>
 
             {/* Stats */}
             <motion.div
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
             >
               <div className="text-center">
@@ -169,12 +173,14 @@ const LandingPage = () => {
           >
             <motion.h2
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="text-4xl font-bold text-gray-900 mb-4"
             >
               Everything you need for fintech support
             </motion.h2>
             <motion.p
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="text-xl text-gray-600 max-w-2xl mx-auto"
             >
               A complete SaaS platform built specifically for the Indian fintech ecosystem
@@ -191,6 +197,7 @@ const LandingPage = () => {
             {/* AI Support */}
             <motion.div
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl hover:shadow-lg transition-all duration-300"
             >
               <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-6">
@@ -219,6 +226,7 @@ const LandingPage = () => {
             {/* WhatsApp Integration */}
             <motion.div
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-2xl hover:shadow-lg transition-all duration-300"
             >
               <div className="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center mb-6">
@@ -247,6 +255,7 @@ const LandingPage = () => {
             {/* Zero-Knowledge Privacy */}
             <motion.div
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-2xl hover:shadow-lg transition-all duration-300"
             >
               <div className="w-12 h-12 bg-purple-600 rounded-lg flex items-center justify-center mb-6">
@@ -275,6 +284,7 @@ const LandingPage = () => {
             {/* Self-Healing */}
             <motion.div
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="bg-gradient-to-br from-orange-50 to-orange-100 p-8 rounded-2xl hover:shadow-lg transition-all duration-300"
             >
               <div className="w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center mb-6">
@@ -303,6 +313,7 @@ const LandingPage = () => {
             {/* Analytics */}
             <motion.div
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="bg-gradient-to-br from-pink-50 to-pink-100 p-8 rounded-2xl hover:shadow-lg transition-all duration-300"
             >
               <div className="w-12 h-12 bg-pink-600 rounded-lg flex items-center justify-center mb-6">
@@ -331,6 +342,7 @@ const LandingPage = () => {
             {/* Developer Experience */}
             <motion.div
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="bg-gradient-to-br from-teal-50 to-teal-100 p-8 rounded-2xl hover:shadow-lg transition-all duration-300"
             >
               <div className="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center mb-6">
@@ -370,18 +382,21 @@ const LandingPage = () => {
           >
             <motion.h2
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="text-4xl font-bold text-white mb-4"
             >
               Ready to transform your fintech support?
             </motion.h2>
             <motion.p
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="text-xl text-blue-100 mb-8"
             >
               Join the leading fintech companies already using TradeMate's SaaS platform
             </motion.p>
             <motion.div
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-4"
             >
               <Link
@@ -434,7 +449,7 @@ const LandingPage = () => {
                 <li><Link href="/docs" className="hover:text-white transition-colors">Documentation</Link></li>
                 <li><Link href="/api" className="hover:text-white transition-colors">API Reference</Link></li>
                 <li><Link href="/sdks" className="hover:text-white transition-colors">SDKs</Link></li>
-                <li><Link href="/sandbox" className="hover:text-white transition-colors">Sandbox</Link></li>
+                <li><Link href="/developer" className="hover:text-white transition-colors">Developer Portal</Link></li>
               </ul>
             </div>
             

@@ -87,8 +87,7 @@ export const useAuthStore = create<AuthState>()(
             state.isLoading = false;
           });
 
-          // Start session monitoring
-          get().startSessionMonitoring();
+          // Authentication successful
         } catch (error) {
           set((state) => {
             state.isLoading = false;

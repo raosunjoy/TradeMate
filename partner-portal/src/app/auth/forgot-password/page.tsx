@@ -27,7 +27,7 @@ const ForgotPasswordPage: React.FC = () => {
     try {
       const response = await apiClient.post('/auth/forgot-password', {
         email: email,
-      });
+      }) as { success: boolean; message?: string };
 
       if (response.success) {
         setIsSubmitted(true);

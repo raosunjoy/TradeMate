@@ -4,6 +4,7 @@ import { Metadata } from 'next';
 import { QueryProvider } from '@/lib/react-query';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { ToastProvider } from '@/components/ui/ToastProvider';
+import { SessionProvider } from '@/components/providers/SessionProvider';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -64,14 +65,15 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
     creator: '@TradeMateAI',
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-  },
   verification: {
     google: 'your-google-verification-code',
   },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 interface RootLayoutProps {
@@ -118,15 +120,17 @@ export default function RootLayout({ children }: RootLayoutProps) {
         />
       </head>
       <body className={`${inter.className} antialiased bg-gray-50 text-gray-900`}>
-        <ErrorBoundary>
-          <QueryProvider>
-            <ToastProvider>
-              <div id="root">
-                {children}
-              </div>
-            </ToastProvider>
-          </QueryProvider>
-        </ErrorBoundary>
+        <SessionProvider>
+          <ErrorBoundary>
+            <QueryProvider>
+              <ToastProvider>
+                <div id="root">
+                  {children}
+                </div>
+              </ToastProvider>
+            </QueryProvider>
+          </ErrorBoundary>
+        </SessionProvider>
         
         {/* Portal for modals */}
         <div id="modal-root" />

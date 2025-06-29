@@ -178,7 +178,7 @@ export interface SelfHealingState {
   };
   metrics: {
     autoRecoveryRate: number;
-    incidentsP evented: number;
+    incidentsPrevented: number;
     recoveryTrend: 'up' | 'down' | 'stable';
     predictions: PredictiveInsight[];
   };

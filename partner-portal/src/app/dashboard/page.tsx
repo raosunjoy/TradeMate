@@ -35,8 +35,7 @@ const DashboardPage: React.FC = () => {
 
   const fadeInUp = {
     initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
+    animate: { opacity: 1, y: 0 }
   };
 
   const staggerChildren = {
@@ -141,6 +140,7 @@ const DashboardPage: React.FC = () => {
             <motion.div
               key={index}
               variants={fadeInUp}
+              transition={{ duration: 0.6 }}
               className="bg-white p-6 rounded-xl border border-slate-200 hover:shadow-lg transition-shadow"
             >
               <div className="flex items-center justify-between">
@@ -181,6 +181,13 @@ const DashboardPage: React.FC = () => {
               Monitor your API usage, manage keys, and view integration status.
             </p>
             <div className="space-y-3">
+              <Link 
+                href="/demo"
+                className="w-full text-left px-4 py-3 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors flex items-center justify-between"
+              >
+                <span className="font-medium text-green-900">🚀 Try Interactive Demo</span>
+                <span className="text-green-600">→</span>
+              </Link>
               <Link 
                 href="/developer"
                 className="w-full text-left px-4 py-3 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors flex items-center justify-between"
