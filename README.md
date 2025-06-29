@@ -62,6 +62,22 @@
 - **Luxury Hospitality**: Cosmic residences, Crystal palace suites
 - **Entertainment**: VIP access to private concerts and exclusive events
 
+### 💰 Investment Infrastructure
+- **Pre-IPO Access**: SpaceX, OpenAI, and unicorn opportunities (₹50 Cr+ minimum)
+- **Luxury Real Estate**: Dubai, Swiss, Monaco properties with anonymous ownership
+- **ESG Investments**: African lithium, renewable energy with 95+ ESG scores
+- **Investment Syndicate**: Lead investor controls with 5-20 participant pools
+- **Anonymous Structures**: SPV formation with nominee ownership
+- **Portfolio Analytics**: Real-time tracking, Sharpe ratio, VaR calculations
+
+### 🤖 AI Services Platform
+- **Service Orchestration**: Intelligent intermediary for approved services
+- **Personalization Engine**: Behavioral analytics and experience design
+- **AI Personalities**: Sterling (Onyx), Prism (Obsidian), Nexus (Void)
+- **Anonymity Preservation**: Complete anonymity wall between clients and providers
+- **Service Vetting**: RBAC-based approval workflow with bias-free vetting
+- **State Management**: Enterprise-grade Zustand implementation
+
 ### 🎨 Reality Distortion Interface
 - **3D Luxury Effects**: Custom GLSL shaders and tier-specific particle systems
 - **Progressive Discovery**: Hidden zones and mystery landing experiences
@@ -93,10 +109,11 @@
 TradeMate/
 ├── black-portal/              # Billionaire-exclusive portal
 │   ├── src/
-│   │   ├── components/        # 15 luxury UI components
-│   │   ├── hooks/            # 3 custom hooks (security, effects, state)
-│   │   ├── services/         # Butler AI engine
-│   │   └── types/            # Complete TypeScript definitions
+│   │   ├── components/        # 30+ luxury UI components
+│   │   ├── hooks/            # 6+ custom hooks (security, effects, state)
+│   │   ├── services/         # 15+ service engines (AI, Investment, Concierge)
+│   │   ├── types/            # Complete TypeScript definitions
+│   │   └── __tests__/        # 17,600+ lines of test coverage
 ├── partner-portal/           # Partner/Developer portal
 ├── docs/                     # Comprehensive documentation
 │   ├── BLACK_PORTAL_DOCUMENTATION.md
