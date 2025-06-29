@@ -170,6 +170,7 @@ const customJestConfig = {
         '<rootDir>/src/**/__tests__/**/e2e/',
         '<rootDir>/src/**/__tests__/**/security/',
         '<rootDir>/src/**/__tests__/**/performance/',
+        '<rootDir>/src/**/__tests__/**/integration/',
       ],
     },
     {
