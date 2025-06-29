@@ -41,18 +41,8 @@ class ErrorBoundary extends Component<Props, State> {
       errorInfo,
     });
 
-    // Log error to store
-    const { addError } = useErrorStore.getState();
-    addError({
-      code: 'REACT_ERROR_BOUNDARY',
-      message: error.message,
-      details: {
-        error: error.toString(),
-        stack: error.stack,
-        componentStack: errorInfo.componentStack,
-        errorBoundary: this.constructor.name,
-      },
-    });
+    // Log error to console
+    console.error('React Error Boundary caught error:', error, errorInfo);
 
     // Call custom error handler if provided
     if (this.props.onError) {
@@ -64,8 +54,11 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   private reportError = (error: Error, errorInfo: ErrorInfo) => {
+    // Only report errors on client side
+    if (typeof window === 'undefined') return;
+
     // Report to Sentry or other error tracking service
-    if (typeof window !== 'undefined' && (window as any).Sentry) {
+    if ((window as any).Sentry) {
       (window as any).Sentry.withScope((scope: any) => {
         scope.setTag('errorBoundary', true);
         scope.setContext('errorInfo', errorInfo);
@@ -274,22 +267,14 @@ export class AsyncErrorBoundary extends Component<Props, State> {
     // Handle async errors specifically
     if (error.name === 'ChunkLoadError' || error.message.includes('Loading chunk')) {
       // Handle code splitting errors
-      window.location.reload();
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
       return;
     }
 
-    // Log to error store
-    const { addError } = useErrorStore.getState();
-    addError({
-      code: 'ASYNC_ERROR_BOUNDARY',
-      message: error.message,
-      details: {
-        error: error.toString(),
-        stack: error.stack,
-        componentStack: errorInfo.componentStack,
-        errorBoundary: 'AsyncErrorBoundary',
-      },
-    });
+    // Log error to console
+    console.error('Async Error Boundary caught error:', error, errorInfo);
 
     if (this.props.onError) {
       this.props.onError(error, errorInfo);

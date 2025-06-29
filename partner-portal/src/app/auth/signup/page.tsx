@@ -164,31 +164,52 @@ const SignUpPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <motion.div 
-        className="max-w-md w-full space-y-8"
-        {...fadeInUp}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100">
+      {/* Top Navigation */}
+      <motion.nav 
+        className="bg-white/80 backdrop-blur-sm border-b border-gray-200"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
       >
-        {/* Header */}
-        <div className="text-center">
-          <motion.div
-            className="flex items-center justify-center space-x-2 mb-8"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <Shield className="h-10 w-10 text-blue-600" />
-            <h1 className="text-3xl font-bold text-slate-900">TradeMate</h1>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <h2 className="text-2xl font-semibold text-slate-900">Create your account</h2>
-            <p className="mt-2 text-slate-600">Join the TradeMate partner ecosystem</p>
-          </motion.div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-xl">T</span>
+              </div>
+              <span className="text-xl font-bold text-gray-900">TradeMate</span>
+              <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">
+                Partners
+              </span>
+            </Link>
+            <Link 
+              href="/auth/signin"
+              className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+            >
+              Already have an account?
+            </Link>
+          </div>
         </div>
+      </motion.nav>
+
+      {/* Main Content */}
+      <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <motion.div 
+          className="max-w-md w-full space-y-8"
+          {...fadeInUp}
+        >
+          {/* Page Header */}
+          <div className="text-center">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <h2 className="text-3xl font-bold text-slate-900">Create your account</h2>
+              <p className="mt-2 text-slate-600">Join the TradeMate partner ecosystem</p>
+            </motion.div>
+          </div>
 
         {/* Error Message */}
         {formError && (
@@ -453,7 +474,8 @@ const SignUpPage: React.FC = () => {
             </Link>
           </p>
         </motion.div>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 };

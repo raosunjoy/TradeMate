@@ -39,15 +39,30 @@ interface ToastProviderProps {
 }
 
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
-  const { notifications, showNotification, hideNotification } = useErrorStore();
+  // Use local state instead of store to avoid SSR issues
+  const [notifications, setNotifications] = React.useState<any[]>([]);
 
   const showToast = useCallback((toast: Omit<ToastData, 'id' | 'timestamp'>) => {
-    showNotification(toast);
-  }, [showNotification]);
+    const newToast = {
+      ...toast,
+      id: `toast_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: new Date(),
+    };
+    
+    setNotifications(prev => [newToast, ...prev]);
+    
+    // Auto-hide if specified
+    if (toast.autoHide !== false) {
+      const duration = toast.duration || 5000;
+      setTimeout(() => {
+        hideToast(newToast.id);
+      }, duration);
+    }
+  }, []);
 
   const hideToast = useCallback((id: string) => {
-    hideNotification(id);
-  }, [hideNotification]);
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  }, []);
 
   return (
     <ToastContext.Provider value={{ showToast, hideToast }}>

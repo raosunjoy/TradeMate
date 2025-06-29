@@ -1,10 +1,7 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { Metadata } from 'next';
-import { QueryProvider } from '@/lib/react-query';
-import ErrorBoundary from '@/components/ErrorBoundary';
-import { ToastProvider } from '@/components/ui/ToastProvider';
-import { SessionProvider } from '@/components/providers/SessionProvider';
+import { ClientProvider } from '@/components/providers/ClientProvider';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -120,17 +117,11 @@ export default function RootLayout({ children }: RootLayoutProps) {
         />
       </head>
       <body className={`${inter.className} antialiased bg-gray-50 text-gray-900`}>
-        <SessionProvider>
-          <ErrorBoundary>
-            <QueryProvider>
-              <ToastProvider>
-                <div id="root">
-                  {children}
-                </div>
-              </ToastProvider>
-            </QueryProvider>
-          </ErrorBoundary>
-        </SessionProvider>
+        <ClientProvider>
+          <div id="root">
+            {children}
+          </div>
+        </ClientProvider>
         
         {/* Portal for modals */}
         <div id="modal-root" />

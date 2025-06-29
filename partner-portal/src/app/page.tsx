@@ -454,12 +454,12 @@ const LandingPage = () => {
             </div>
             
             <div>
-              <h3 className="font-semibold mb-4">Company</h3>
+              <h3 className="font-semibold mb-4">Support</h3>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
-                <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
-                <li><Link href="/careers" className="hover:text-white transition-colors">Careers</Link></li>
-                <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
+                <li><Link href="/contact" className="hover:text-white transition-colors">AI Support</Link></li>
+                <li><a href="https://wa.me/919876543210?text=Hi,%20I%20need%20support%20with%20TradeMate" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">WhatsApp AI</a></li>
+                <li><Link href="/demo" className="hover:text-white transition-colors">Try Demo</Link></li>
+                <li><Link href="/dashboard/health" className="hover:text-white transition-colors">System Status</Link></li>
               </ul>
             </div>
           </div>
